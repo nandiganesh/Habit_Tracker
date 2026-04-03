@@ -1,8 +1,35 @@
+import { useState, useEffect } from 'react';
 import { Outlet, Link } from 'react-router-dom';
-import { Target, Activity, LayoutDashboard, LogOut } from 'lucide-react';
+import { Target, Activity, LayoutDashboard, LogOut, Sun, Moon } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 export default function Layout() {
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      root.classList.add('dark');
+      setIsDark(true);
+    } else {
+      root.classList.remove('dark');
+      setIsDark(false);
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const root = window.document.documentElement;
+    if (isDark) {
+      root.classList.remove('dark');
+      localStorage.theme = 'light';
+      setIsDark(false);
+    } else {
+      root.classList.add('dark');
+      localStorage.theme = 'dark';
+      setIsDark(true);
+    }
+  };
+
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     window.location.href = '/login';
@@ -29,13 +56,26 @@ export default function Layout() {
             </Link>
           </nav>
         </div>
-        <button
-          onClick={handleSignOut}
-          className="hidden md:flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-slate-500 hover:text-red-600 transition font-medium w-full mt-auto"
-        >
-          <LogOut className="w-5 h-5" /> Sign Out
-        </button>
+        
+        <div className="w-full flex md:flex-col gap-2 mt-auto">
+          <button
+            onClick={toggleTheme}
+            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 text-slate-500 hover:text-slate-800 transition font-medium w-full"
+            title="Toggle theme"
+          >
+            {isDark ? <Sun className="w-5 h-5 text-orange-400 shrink-0" /> : <Moon className="w-5 h-5 shrink-0" />}
+            <span className="hidden md:inline">{isDark ? 'Light Mode' : 'Dark Mode'}</span>
+          </button>
+          
+          <button
+            onClick={handleSignOut}
+            className="hidden md:flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-slate-500 hover:text-red-600 transition font-medium w-full"
+          >
+            <LogOut className="w-5 h-5 shrink-0" /> Sign Out
+          </button>
+        </div>
       </aside>
+
       
       {/* Main Content */}
       <main className="flex-1 p-6 md:p-10 overflow-y-auto w-full max-w-5xl mx-auto">
