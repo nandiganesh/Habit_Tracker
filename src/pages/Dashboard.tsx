@@ -67,18 +67,18 @@ export default function Dashboard() {
             <h2 className="text-xl font-bold text-slate-800">30-Day Heatmap Matrix</h2>
             <p className="text-sm text-muted">Daily individual habit breakdown for the past month</p>
           </div>
-          <div className="p-6">
-            <div className="flex flex-col gap-6">
+          <div className="p-6 overflow-x-auto">
+            <div className="flex flex-col gap-6 min-w-fit">
               {habits.map(h => (
                 <div key={h.habit_id} className="flex flex-col xl:flex-row xl:items-center gap-2 xl:gap-6">
                   <div className="w-full xl:w-40 text-sm font-bold text-slate-800 truncate" title={h.title}>{h.title}</div>
-                  <div className="flex flex-wrap gap-1.5 flex-1">
+                  <div className="flex gap-1.5 flex-1 min-w-max">
                     {last30Days.slice().reverse().map(day => {
                       const logStatus = logs.find(l => l.habit_id === h.habit_id && l.completion_date === day.date)?.status;
                       return (
                         <div 
                           key={day.date} 
-                          className={`w-4 h-4 sm:w-5 sm:h-5 rounded-[4px] transition-colors border border-black/5 hover:border-black/20 cursor-pointer ${
+                          className={`w-5 h-5 rounded-[4px] transition-colors border border-black/5 hover:border-black/20 cursor-pointer ${
                             logStatus === 'completed' ? 'bg-primary' :
                             logStatus === 'partial' ? 'bg-pink-300' :
                             logStatus === 'missed' ? 'bg-red-400' :
@@ -99,14 +99,14 @@ export default function Dashboard() {
         </section>
 
         {/* 30-Day Aggregate Consistency - Moved Down */}
-        <section className="bg-card rounded-xl border border-slate-100 p-6 sm:p-8 overflow-hidden shadow-sm">
+        <section className="bg-card rounded-xl border border-slate-100 p-6 sm:p-8 shadow-sm">
           <h2 className="text-xl font-bold mb-6 text-slate-800">Aggregate Consistency (30 Days)</h2>
-          <div className="flex justify-between items-end gap-1 h-32">
+          <div className="flex justify-between items-end gap-1 h-40 overflow-x-auto pb-2">
             {last30Days.map(day => (
-              <div key={day.date} className="flex flex-col items-center gap-1 w-full group cursor-pointer h-full justify-end">
+              <div key={day.date} className="flex flex-col items-center gap-1 flex-1 min-w-[12px] sm:min-w-[20px] max-w-[40px] group cursor-pointer h-full justify-end">
                 <div className="w-full bg-slate-50 rounded flex flex-col justify-end overflow-hidden flex-1 relative border border-slate-100 border-b-0">
                   <div 
-                    className="bg-primary hover:bg-pink-500 rounded-t-sm w-full transition-all duration-300 min-h-[2px]" 
+                    className="bg-primary hover:bg-pink-500 w-full transition-all duration-300 min-h-[2px]" 
                     style={{ height: `${Math.max(2, day.percent)}%` }} 
                     title={`${day.date}: ${day.percent}%`}
                   ></div>
