@@ -56,31 +56,28 @@ export default function Layout() {
             </Link>
           </nav>
         </div>
-        
-        <div className="w-full flex md:flex-col gap-2 mt-auto">
-          <button
-            onClick={toggleTheme}
-            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 text-slate-500 hover:text-slate-800 transition font-medium w-full"
-            title="Toggle theme"
-          >
-            {isDark ? <Sun className="w-5 h-5 text-orange-400 shrink-0" /> : <Moon className="w-5 h-5 shrink-0" />}
-            <span className="hidden md:inline">{isDark ? 'Light Mode' : 'Dark Mode'}</span>
-          </button>
-          
-          <button
-            onClick={handleSignOut}
-            className="hidden md:flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-slate-500 hover:text-red-600 transition font-medium w-full"
-          >
-            <LogOut className="w-5 h-5 shrink-0" /> Sign Out
-          </button>
-        </div>
+        <button
+          onClick={handleSignOut}
+          className="hidden md:flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-slate-500 hover:text-red-600 transition font-medium w-full mt-auto"
+        >
+          <LogOut className="w-5 h-5 shrink-0" /> Sign Out
+        </button>
       </aside>
 
       
       {/* Main Content */}
-      <main className="flex-1 p-6 md:p-10 overflow-y-auto w-full max-w-5xl mx-auto">
+      <main className="flex-1 p-6 md:p-10 overflow-y-auto w-full max-w-5xl mx-auto relative">
         <Outlet />
       </main>
+
+      {/* Floating theme toggle — always visible, bottom-right */}
+      <button
+        onClick={toggleTheme}
+        className="fixed bottom-6 right-6 z-50 w-10 h-10 rounded-full bg-card border border-slate-200 shadow-lg flex items-center justify-center hover:scale-110 transition-transform"
+        title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+      >
+        {isDark ? <Sun className="w-4 h-4 text-orange-400" /> : <Moon className="w-4 h-4 text-slate-500" />}
+      </button>
     </div>
   );
 }
